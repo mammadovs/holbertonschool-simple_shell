@@ -1,20 +1,19 @@
 #include "shell.h"
-#include <stdlib.h>
-#include <unistd.h>
 
+/**
+ * main - точка входа в простой шелл
+ * Return: всегда 0
+ */
 int main(void)
 {
     char *line;
 
     while (1)
     {
-        /* Выводим $ только если ввод идет из терминала */
         if (isatty(STDIN_FILENO))
             display_prompt();
 
         line = read_line();
-        
-        /* Если получили EOF (Ctrl+D или конец pipe) */
         if (!line)
         {
             if (isatty(STDIN_FILENO))
@@ -22,9 +21,8 @@ int main(void)
             exit(0);
         }
 
-        /* Вызываем функцию исполнения. Передаем NULL для argv и env */
+        /* Передаем NULL, чтобы избежать ошибок с неиспользуемыми аргументами */
         execute_command(line, NULL, NULL);
-        
         free(line);
     }
 

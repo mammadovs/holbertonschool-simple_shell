@@ -1,5 +1,9 @@
 #include "shell.h"
 
+/**
+ * read_line - читает строку из стандартного ввода
+ * Return: указатель на строку или NULL при EOF
+ */
 char *read_line(void)
 {
     char *line = NULL;
@@ -13,9 +17,11 @@ char *read_line(void)
         return (NULL);
     }
 
-    /* Убираем \n в конце строки */
+    /* Удаляем символ новой строки для корректной работы execve */
     if (nread > 0 && line[nread - 1] == '\n')
+    {
         line[nread - 1] = '\0';
+    }
 
     return (line);
 }
