@@ -1,9 +1,5 @@
 #include "shell.h"
 
-/**
- * main - основной цикл шелла
- * Return: статус последнего процесса
- */
 int main(void)
 {
 	char *line;
@@ -13,10 +9,10 @@ int main(void)
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
-			write(STDOUT_FILENO, "$ ", 2);
+			write(1, "$ ", 2);
 
 		line = read_line();
-		if (!line)
+		if (line == NULL)
 			break;
 
 		i = 0;
@@ -35,8 +31,8 @@ int main(void)
 			{
 				for (i = 0; environ[i]; i++)
 				{
-					write(STDOUT_FILENO, environ[i], strlen(environ[i]));
-					write(STDOUT_FILENO, "\n", 1);
+					write(1, environ[i], strlen(environ[i]));
+					write(1, "\n", 1);
 				}
 				status = 0;
 			}
@@ -44,6 +40,7 @@ int main(void)
 				status = execute_command(args);
 		}
 		free(line);
+
 		if (!isatty(STDIN_FILENO) && status == 127)
 			exit(127);
 	}

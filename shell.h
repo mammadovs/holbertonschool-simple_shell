@@ -9,12 +9,11 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 
-/* Внешняя переменная окружения */
 extern char **environ;
 
-/* Прототипы функций */
+/* Основные функции */
 char *read_line(void);
 int execute_command(char **args);
-char *_which(char *command);
+char *_which(char *cmd);
 
 #endif

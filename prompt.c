@@ -1,10 +1,12 @@
-#include <unistd.h>
+#include "shell.h"
 
 /**
- * display_prompt - выводит приглашение $ если stdin является терминалом
+ * display_prompt - рисует знак доллара для ввода
+ * Мы проверяем isatty, чтобы не спамить промптом в скриптах
  */
 void display_prompt(void)
 {
-    if (isatty(STDIN_FILENO))
-        write(STDOUT_FILENO, "$ ", 2);
+	/* 0 - это stdin, 1 - это stdout. Так короче и понятнее */
+	if (isatty(0))
+		write(1, "$ ", 2);
 }
