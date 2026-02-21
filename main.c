@@ -8,10 +8,13 @@ int main(void)
 
     while (1)
     {
+        /* Выводим $ только если ввод идет из терминала */
         if (isatty(STDIN_FILENO))
             display_prompt();
 
         line = read_line();
+        
+        /* Если получили EOF (Ctrl+D или конец pipe) */
         if (!line)
         {
             if (isatty(STDIN_FILENO))
@@ -19,9 +22,11 @@ int main(void)
             exit(0);
         }
 
-        execute_command(line, 0, 0);
+        /* Вызываем функцию исполнения. Передаем NULL для argv и env */
+        execute_command(line, NULL, NULL);
+        
         free(line);
     }
 
-    return 0;
+    return (0);
 }

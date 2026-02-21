@@ -1,11 +1,5 @@
 #include "shell.h"
-#include <stdio.h>
-#include <stdlib.h>
 
-/**
- * read_line - читает строку из stdin
- * Return: указатель на строку (malloc), или NULL при EOF
- */
 char *read_line(void)
 {
     char *line = NULL;
@@ -16,8 +10,12 @@ char *read_line(void)
     if (nread == -1)
     {
         free(line);
-        return NULL;
+        return (NULL);
     }
 
-    return line;
+    /* Убираем \n в конце строки */
+    if (nread > 0 && line[nread - 1] == '\n')
+        line[nread - 1] = '\0';
+
+    return (line);
 }

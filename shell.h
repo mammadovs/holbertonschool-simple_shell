@@ -1,8 +1,15 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-int execute_command(char *command, char argv, char env);
-char *read_line(void);
-void display_prompt(void);
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
 
-#endif /* SHELL_H */
+void display_prompt(void);
+char *read_line(void);
+int execute_command(char *command, char **argv, char **env);
+
+#endif
