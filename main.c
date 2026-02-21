@@ -2,18 +2,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/**
- * main - точка входа в простую оболочку
- * @argc: количество аргументов (не используется)
- * @argv: аргументы командной строки
- * @env: переменные окружения
- *
- * Return: 0 при успешном завершении
- */
-int main(int argc, char **argv, char **env)
+int main(void)
 {
     char *line;
-    (void)argc;
 
     while (1)
     {
@@ -23,17 +14,19 @@ int main(int argc, char **argv, char **env)
         line = read_line();
         if (!line)
         {
-            /* EOF (Ctrl+D) */
             if (isatty(STDIN_FILENO))
                 write(STDOUT_FILENO, "\n", 1);
             exit(0);
         }
 
-        if (line[0] != '\0')
-            execute_command(line, argv, env);
-
+        execute_command(line, 0, 0);
         free(line);
     }
 
-    return (0);
+    return 0;
+}
+
+void display_prompt(void)
+{
+    write(STDOUT_FILENO, "$ ", 2);
 }
