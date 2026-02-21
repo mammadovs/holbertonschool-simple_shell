@@ -1,5 +1,9 @@
 #include "shell.h"
 
+/**
+ * read_line - reads input from stdin
+ * Return: pointer to the string or NULL
+ */
 char *read_line(void)
 {
 	char *line = NULL;
