@@ -1,23 +1,20 @@
 #include "shell.h"
 
-/**
- * execute_command - создает процесс и запускает программу
- * @command: путь к исполняемому файлу
- * @argv: массив аргументов (не используется)
- * @env: переменные окружения (не используется)
- * Return: 0 при успехе
- */
-int execute_command(char *command, char **argv, char **env)
+int execute_command(char *line, char **argv, char **env)
 {
     pid_t child_pid;
     int status;
     char *args[2];
+    char *command;
 
-    /* Подавляем ошибки компилятора о неиспользуемых аргументах */
     (void)argv;
     (void)env;
 
-    if (!command || command[0] == '\0')
+    /* strtok разбивает строку на части, используя пробелы и табы как разделители */
+    command = strtok(line, " \t\r\n\a");
+    
+    /* Если после strtok ничего не осталось (строка была только из пробелов) */
+    if (!command)
         return (0);
 
     child_pid = fork();
@@ -29,7 +26,7 @@ int execute_command(char *command, char **argv, char **env)
 
     if (child_pid == 0)
     {
-        args[0] = command;
+        args[0] = command; /* Теперь здесь чистая команда без пробелов */
         args[1] = NULL;
 
         if (execve(args[0], args, NULL) == -1)
