@@ -1,62 +1,69 @@
 #include "shell.h"
-#include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /**
- * trim_spaces - убирает пробелы в начале и конце строки
- * @str: исходная строка
+ * read_line - считывает строку с ввода
  *
- * Return: указатель на "обрезанную" строку
- */
-char *trim_spaces(char *str)
-{
-	char *end;
-
-	if (!str)
-		return (NULL);
-
-	/* убираем ведущие пробелы */
-	while (*str && (*str == ' ' || *str == '\t'))
-		str++;
-
-	/* если строка пустая */
-	if (*str == '\0')
-		return (str);
-
-	/* убираем пробелы в конце */
-	end = str + strlen(str) - 1;
-	while (end > str && (*end == ' ' || *end == '\t'))
-		end--;
-
-	end[1] = '\0';
-	return (str);
-}
-
-/**
- * read_line - считывает строку из stdin
- *
- * Return: указатель на строку, или NULL при EOF
+ * Return: указатель на строку (необходимо free), или NULL при EOF
  */
 char *read_line(void)
 {
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t read_chars;
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read_chars;
+    char *trimmed_line;
 
-	read_chars = getline(&line, &len, stdin);
-	if (read_chars == -1)
-	{
-		free(line);
-		return (NULL);
-	}
+    read_chars = getline(&line, &len, stdin);
+    if (read_chars == -1)
+    {
+        free(line);
+        return (NULL);
+    }
 
-	/* убираем только последний '\n', если он есть */
-	if (read_chars > 0 && line[read_chars - 1] == '\n')
-		line[read_chars - 1] = '\0';
+    if (read_chars > 0 && line[read_chars - 1] == '\n')
+        line[read_chars - 1] = '\0';
 
-	/* убираем пробелы в начале и конце */
-	line = trim_spaces(line);
+    trimmed_line = trim_spaces(line);
 
-	return (line);
+    /* Если trim_spaces сдвигает указатель, делаем копию */
+    if (trimmed_line != line)
+    {
+        char *copy = strdup(trimmed_line);
+        free(line);
+        return (copy);
+    }
+
+    return (line);
+}
+
+/**
+ * trim_spaces - удаляет ведущие и конечные пробелы строки
+ * @str: исходная строка
+ *
+ * Return: указатель на строку без ведущих/конечных пробелов
+ */
+char *trim_spaces(char *str)
+{
+    char *end;
+
+    if (!str)
+        return (NULL);
+
+    /* Убираем ведущие пробелы */
+    while (*str == ' ' || *str == '\t')
+        str++;
+
+    if (*str == 0)  /* строка полностью из пробелов */
+        return str;
+
+    /* Убираем конечные пробелы */
+    end = str + strlen(str) - 1;
+    while (end > str && (*end == ' ' || *end == '\t'))
+        end--;
+
+    *(end + 1) = '\0';
+
+    return str;
 }
