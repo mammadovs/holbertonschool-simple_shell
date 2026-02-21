@@ -1,56 +1,51 @@
-#include "shell.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 /**
- * execute_command - executes a command
- * @command: command string
- * @argv: argument vector
- * @env: environment variables
- *
- * Return: 0 on success, -1 on failure
+ * execute_command - запускает команду с аргументами
+ * @line: введённая строка пользователем
+ * @env: массив переменных окружения
  */
-int execute_command(char *command, char **argv, char **env)
+void execute_command(char *line, char **env)
 {
-	pid_t pid;
-	int status;
+    char *args[100];  // Массив для аргументов
+    int i = 0;
+    char *token;
+    pid_t pid;
+    int status;
 
-	pid = fork();
+    // Токенизация строки по пробелам
+    token = strtok(line, " \t\n");
+    while (token != NULL)
+    {
+        args[i++] = token;
+        token = strtok(NULL, " \t\n");
+    }
+    args[i] = NULL; // последний элемент должен быть NULL
 
-	if (pid == -1)
-	{
-		perror(argv[0]);
-		return (-1);
-	}
+    if (i == 0)
+        return; // если строка пустая, ничего не делаем
 
-	if (pid == 0)
-	{
-		char *args[2];
-
-		args[0] = command;
-		args[1] = NULL;
-
-		if (execve(command, args, env) == -1)
-		{
-			print_error(argv[0], command);
-			exit(127);
-		}
-	}
-	else
-	{
-		wait(&status);
-	}
-
-	return (0);
-}
-
-/**
- * print_error - prints error message
- * @shell_name: shell name
- * @command: command not found
- */
-void print_error(char *shell_name, char *command)
-{
-	write(STDERR_FILENO, shell_name, strlen(shell_name));
-	write(STDERR_FILENO, ": 1: ", 4);
-	write(STDERR_FILENO, command, strlen(command));
-	write(STDERR_FILENO, ": not found\n", 12);
+    pid = fork();
+    if (pid == 0)
+    {
+        // Дочерний процесс: выполняем команду
+        if (execve(args[0], args, env) == -1)
+        {
+            perror("./hsh");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else if (pid > 0)
+    {
+        // Родительский процесс: ждём завершения дочернего
+        waitpid(pid, &status, 0);
+    }
+    else
+    {
+        perror("fork");
+    }
 }
