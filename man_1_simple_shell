@@ -1,45 +1,48 @@
 .TH hsh 1 "February 2026" "Simple Shell" "User Commands"
 .SH NAME
-hsh \- simple UNIX command interpreter
+hsh \- a minimal UNIX command line interpreter
 
 .SH SYNOPSIS
-.B hsh
+.B ./hsh
 
 .SH DESCRIPTION
 .B hsh
-is a simple UNIX command language interpreter.
+is a simple shell created as a project for Holberton School. It reads commands from the standard input and attempts to execute them on the system.
 
-The shell displays a prompt and waits for the user to type a command.
-Command lines are simple and contain only one word.
-No arguments are supported.
+The shell operates in two modes:
+.PP
+.IP "\fBInteractive Mode\fR"
+When the input is connected to a terminal (keyboard), \fBhsh\fR displays a prompt ($) and waits for user input.
+.IP "\fBNon-interactive Mode\fR"
+When commands are piped into the shell (e.g., echo "ls" | ./hsh), it processes the commands and exits without displaying a prompt.
 
-The shell:
-.TP
-\(bu displays a prompt
-.TP
-\(bu executes commands without arguments
-.TP
-\(bu handles errors
-.TP
-\(bu handles EOF (Ctrl+D)
-.TP
-\(bu uses execve to execute programs
+.SH FEATURES
+.IP \(bu 2
+Displays a prompt ($ ) if the standard input is a terminal.
+.IP \(bu 2
+Uses \fBexecve\fR to run programs found in the \fBPATH\fR.
+.IP \(bu 2
+Handles the end-of-file condition (Ctrl+D) gracefully.
+.IP \(bu 2
+Supports basic built-in commands like \fBexit\fR and \fBenv\fR.
+.IP \(bu 2
+Prints clear error messages in the style of \fB/bin/sh\fR.
 
-If the executable cannot be found, an error message is printed
-and the prompt is displayed again.
+.SH EXIT STATUS
+Returns 0 on successful execution. If a command is not found, it returns 127.
 
-.SH RETURN VALUE
-The shell returns 0 on success.
-If execve fails, the child process exits with status 127.
+.SH BUGS
+This version does not support pipes, redirections, or command arguments. Only single-word commands are executed.
 
 .SH ENVIRONMENT
-The shell passes the environment to execve.
+\fBhsh\fR uses the system environment variables, specifically \fBPATH\fR to locate executables and \fBenviron\fR for the \fBenv\fR command.
 
 .SH AUTHORS
-See AUTHORS file in the project root.
+Written by Saddam Mammadov.
 
 .SH SEE ALSO
-.BR sh (1),
-.BR execve (2),
-.BR fork (2),
-.BR wait (2)
+.BR sh(1),
+.BR fork(2),
+.BR execve(2),
+.BR wait(2),
+.BR free(3)
