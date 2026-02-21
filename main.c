@@ -1,12 +1,14 @@
 #include "shell.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 /**
- * main - Entry point for simple shell
- * @argc: argument count (unused)
- * @argv: argument vector
- * @env: environment variables
+ * main - вход в simple shell
+ * @argc: количество аргументов (не используется)
+ * @argv: вектор аргументов
+ * @env: переменные окружения
  *
- * Return: 0 always
+ * Return: 0 всегда
  */
 int main(int argc, char **argv, char **env)
 {
@@ -15,7 +17,7 @@ int main(int argc, char **argv, char **env)
 
 	while (1)
 	{
-		/* Показ prompt только если интерактивный терминал */
+		/* отображаем prompt только если интерактивный терминал */
 		if (isatty(STDIN_FILENO))
 			display_prompt();
 
