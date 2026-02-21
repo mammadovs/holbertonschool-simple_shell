@@ -13,7 +13,6 @@
 extern char **environ;
 
 /* Прототипы функций */
-void display_prompt(void);
 char *read_line(void);
 int execute_command(char **args);
 char *_which(char *command);

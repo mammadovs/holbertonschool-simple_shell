@@ -1,8 +1,8 @@
 #include "shell.h"
 
 /**
- * main - точка входа в простой шелл
- * Return: статус последнего выполненного процесса
+ * main - основной цикл шелла
+ * Return: статус последнего процесса
  */
 int main(void)
 {
@@ -12,41 +12,38 @@ int main(void)
 
 	while (1)
 	{
-		/* Выводим промпт только в интерактивном режиме */
 		if (isatty(STDIN_FILENO))
-		{
 			write(STDOUT_FILENO, "$ ", 2);
-		}
 
 		line = read_line();
-		if (!line) /* Обработка EOF (Ctrl+D) */
+		if (!line)
 			break;
 
-		/* Встроенная команда exit */
-		if (strcmp(line, "exit") == 0)
-		{
-			free(line);
-			exit(status);
-		}
-
-		/* Разбиваем строку на аргументы */
 		i = 0;
 		args[i] = strtok(line, " \t\r\n\a");
 		while (args[i] != NULL && i < 31)
-		{
-			i++;
-			args[i] = strtok(NULL, " \t\r\n\a");
-		}
+			args[++i] = strtok(NULL, " \t\r\n\a");
 
-		/* Выполняем команду, если она введена */
 		if (args[0] != NULL)
 		{
-			status = execute_command(args);
+			if (strcmp(args[0], "exit") == 0)
+			{
+				free(line);
+				exit(status);
+			}
+			if (strcmp(args[0], "env") == 0)
+			{
+				for (i = 0; environ[i]; i++)
+				{
+					write(STDOUT_FILENO, environ[i], strlen(environ[i]));
+					write(STDOUT_FILENO, "\n", 1);
+				}
+				status = 0;
+			}
+			else
+				status = execute_command(args);
 		}
-
 		free(line);
-
-		/* Если не интерактивный режим и команда не найдена, выходим с 127 */
 		if (!isatty(STDIN_FILENO) && status == 127)
 			exit(127);
 	}

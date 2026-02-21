@@ -1,9 +1,9 @@
 #include "shell.h"
 
 /**
- * _which - ищет команду в PATH
+ * _which - ищет полный путь к команде в PATH
  * @command: имя команды
- * Return: полный путь или NULL
+ * Return: путь или NULL
  */
 char *_which(char *command)
 {
@@ -17,19 +17,12 @@ char *_which(char *command)
 			return (strdup(command));
 		return (NULL);
 	}
-
 	path = NULL;
 	for (i = 0; environ[i]; i++)
-	{
 		if (strncmp(environ[i], "PATH=", 5) == 0)
-		{
 			path = environ[i] + 5;
-			break;
-		}
-	}
 	if (!path || !*path)
 		return (NULL);
-
 	path_copy = strdup(path);
 	token = strtok(path_copy, ":");
 	while (token)
@@ -51,9 +44,9 @@ char *_which(char *command)
 }
 
 /**
- * execute_command - выполняет команду с защитой от лишнего форка
- * @args: массив аргументов
- * Return: статус выхода
+ * execute_command - вызывает fork только если команда существует
+ * @args: аргументы
+ * Return: статус выполнения
  */
 int execute_command(char **args)
 {
@@ -67,7 +60,6 @@ int execute_command(char **args)
 		fprintf(stderr, "./hsh: 1: %s: not found\n", args[0]);
 		return (127);
 	}
-
 	child_pid = fork();
 	if (child_pid == -1)
 	{
@@ -75,7 +67,6 @@ int execute_command(char **args)
 		free(full_path);
 		return (1);
 	}
-
 	if (child_pid == 0)
 	{
 		if (execve(full_path, args, environ) == -1)

@@ -1,8 +1,8 @@
 #include "shell.h"
 
 /**
- * read_line - читает строку из stdin
- * Return: указатель на строку или NULL
+ * read_line - читает строку и удаляет символ переноса
+ * Return: строку или NULL
  */
 char *read_line(void)
 {
@@ -16,10 +16,7 @@ char *read_line(void)
 		free(line);
 		return (NULL);
 	}
-
-	/* Убираем символ новой строки в конце */
 	if (nread > 0 && line[nread - 1] == '\n')
 		line[nread - 1] = '\0';
-
 	return (line);
 }
