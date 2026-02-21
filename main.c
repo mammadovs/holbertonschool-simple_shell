@@ -6,7 +6,7 @@
  * @argv: argument vector
  * @env: environment variables
  *
- * Return: Always 0
+ * Return: 0 always
  */
 int main(int argc, char **argv, char **env)
 {
@@ -15,6 +15,7 @@ int main(int argc, char **argv, char **env)
 
 	while (1)
 	{
+		/* Показ prompt только если интерактивный терминал */
 		if (isatty(STDIN_FILENO))
 			display_prompt();
 
@@ -22,7 +23,8 @@ int main(int argc, char **argv, char **env)
 		if (!line)
 		{
 			/* EOF (Ctrl+D) */
-			write(STDOUT_FILENO, "\n", 1);
+			if (isatty(STDIN_FILENO))
+				write(STDOUT_FILENO, "\n", 1);
 			exit(0);
 		}
 
