@@ -2,7 +2,7 @@
 
 /**
  * main - Entry point for simple shell
- * @argc: argument count
+ * @argc: argument count (unused)
  * @argv: argument vector
  * @env: environment variables
  *
@@ -15,11 +15,13 @@ int main(int argc, char **argv, char **env)
 
 	while (1)
 	{
-		display_prompt();
-		line = read_line();
+		if (isatty(STDIN_FILENO))
+			display_prompt();
 
+		line = read_line();
 		if (!line)
 		{
+			/* EOF (Ctrl+D) */
 			write(STDOUT_FILENO, "\n", 1);
 			exit(0);
 		}
