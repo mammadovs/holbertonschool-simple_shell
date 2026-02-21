@@ -6,7 +6,7 @@
  * @argv: argument vector
  * @env: environment variables
  *
- * Return: 0 on success
+ * Return: 0 on success, -1 on failure
  */
 int execute_command(char *command, char **argv, char **env)
 {
@@ -23,14 +23,21 @@ int execute_command(char *command, char **argv, char **env)
 
 	if (pid == 0)
 	{
-		if (execve(command, (char *[]){command, NULL}, env) == -1)
+		char *args[2];
+
+		args[0] = command;
+		args[1] = NULL;
+
+		if (execve(command, args, env) == -1)
 		{
 			print_error(argv[0], command);
 			exit(127);
 		}
 	}
 	else
+	{
 		wait(&status);
+	}
 
 	return (0);
 }
