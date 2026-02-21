@@ -1,10 +1,10 @@
-#include "shell.h"
+#include <unistd.h>
 
 /**
- * display_prompt - prints shell prompt
+ * display_prompt - выводит приглашение $ если stdin является терминалом
  */
 void display_prompt(void)
 {
-	if (isatty(STDIN_FILENO))
-		write(STDOUT_FILENO, "$ ", 2);
+    if (isatty(STDIN_FILENO))
+        write(STDOUT_FILENO, "$ ", 2);
 }
