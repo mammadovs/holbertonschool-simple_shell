@@ -25,8 +25,3 @@ int main(void)
 
     return 0;
 }
-
-void display_prompt(void)
-{
-    write(STDOUT_FILENO, "$ ", 2);
-}
