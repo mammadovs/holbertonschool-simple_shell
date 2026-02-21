@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Прототип функции trim_spaces */
+char *trim_spaces(char *str);
+
 /**
  * read_line - считывает строку с ввода
  *
@@ -27,7 +30,6 @@ char *read_line(void)
 
     trimmed_line = trim_spaces(line);
 
-    /* Если trim_spaces сдвигает указатель, делаем копию */
     if (trimmed_line != line)
     {
         char *copy = strdup(trimmed_line);
@@ -51,14 +53,14 @@ char *trim_spaces(char *str)
     if (!str)
         return (NULL);
 
-    /* Убираем ведущие пробелы */
+    /* убираем ведущие пробелы */
     while (*str == ' ' || *str == '\t')
         str++;
 
     if (*str == 0)  /* строка полностью из пробелов */
         return str;
 
-    /* Убираем конечные пробелы */
+    /* убираем конечные пробелы */
     end = str + strlen(str) - 1;
     while (end > str && (*end == ' ' || *end == '\t'))
         end--;
